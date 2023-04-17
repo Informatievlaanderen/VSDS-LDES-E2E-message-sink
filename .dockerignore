@@ -1,4 +1,8 @@
-node_modules
-dist
+.github
 coverage
 data
+dist
+node_modules
+CODEOWNERS
+docker-compose.yml
+README.md
