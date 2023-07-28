@@ -56,12 +56,12 @@ export class MemberController {
             const id = ids[0].subject.value;
             const exists = await this._storage.exists(id);
             if (exists) {
-                console.warn(`overriding id '${id}'`);
+                console.warn(`[WARNING] overriding id '${id}'`);
             }
             return this._storage.insertOrUpdate(id, member);
         }
         
-        console.warn('missing unique id:\n', ids);
+        console.warn('[WARNING] missing unique id:\n', ids);
         return undefined;
     }
 
