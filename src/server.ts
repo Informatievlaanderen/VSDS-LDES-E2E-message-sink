@@ -36,7 +36,7 @@ const storage: IStorage = useMemoryStorage
   : new MongoStorage(connectionUri, databaseName, collectionName);
 
 if(!silent) {
-  console.log('using storage: ', storage.storageTypeName);
+  console.debug('Using storage: ', storage.storageTypeName);
 }
 const controller = new MemberController(memberType, storage);
 
@@ -52,9 +52,7 @@ server.addHook('onResponse', (request, reply, done) => {
   if (!silent) {
     const method = request.method;
     const statusCode = reply.statusCode;
-    console.debug(method === 'POST' 
-      ? `${method} ${request.url} ${request.headers['content-type']} ${statusCode}` 
-      : `${method} ${request.url} ${statusCode}`);
+    console.info(`[INFO] ${method} ${request.url}${method === 'POST' ? ' ' + request.headers['content-type'] : ''} ${statusCode}`);
   }
   done();
 });
@@ -71,7 +69,7 @@ server.addContentTypeParser(['application/n-quads', 'application/n-triples'], { 
     }
     done(null, member);
   } catch (error: any) {
-    console.error(error);
+    console.error('[ERROR] ', error);
     error.statusCode = 400;
     done(error, undefined);
   }
@@ -87,11 +85,11 @@ server.post('/member', async (request, reply) => {
     const member = request.body as ParsedMember;
     const id = await controller.postMember({contentType: member.contentType, body: member.body} as Member, member.quads);
     if (!silent && id) {
-      console.info(`ingested ${id}`);
+      console.info(`[INFO] ingested ${id}`);
     }
     reply.status(id ? 201 : 422).send(id || '');
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    console.error('[ERROR] ', error);
     reply.status(500);
   }
 });
@@ -127,8 +125,8 @@ async function closeGracefully(signal: any) {
 
 process.on('SIGINT', closeGracefully);
 
-function exitWithError(err: any) {
-  console.error(err);
+function exitWithError(error: any) {
+  console.error('[ERROR] ', error);
   process.exit(1);
 }
 
