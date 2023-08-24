@@ -66,7 +66,7 @@ export class MemberController {
                 return this._storage.insertOrUpdate(id, member);
             }
             case 0: {
-                console.warn('[WARNING] missing id:\n', quads);
+                console.warn('[WARNING] missing id:\n', member.body);
                 break;
             }
             default: {
