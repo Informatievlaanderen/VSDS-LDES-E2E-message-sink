@@ -50,18 +50,30 @@ export class MemberController {
     }
 
     public async postMember(member: Member, quads: Quad[]) {
-        const ids = quads.filter(x => x.predicate.value === ns.rdf.type && x.object.value === this._memberType);
-
-        if (ids && ids.length === 1 && ids[0]) {
-            const id = ids[0].subject.value;
-            const exists = await this._storage.exists(id);
-            if (exists) {
-                console.warn(`[WARNING] overriding id '${id}'`);
-            }
-            return this._storage.insertOrUpdate(id, member);
+        if (!quads) {
+            throw new Error('Quads cannot be undefined');
         }
+
+        const ids = quads.filter(x => x.predicate.value === ns.rdf.type && x.object.value === this._memberType);
         
-        console.warn('[WARNING] missing unique id:\n', ids);
+        switch (ids.length) {
+            case 1: {
+                const id = ids[0]?.subject.value || '';
+                const exists = await this._storage.exists(id);
+                if (exists) {
+                    console.warn(`[WARNING] overriding id '${id}'`);
+                }
+                return this._storage.insertOrUpdate(id, member);
+            }
+            case 0: {
+                console.warn('[WARNING] missing id:\n', member.body);
+                break;
+            }
+            default: {
+                console.warn('[WARNING] missing unique id:\n', ids);
+                break;
+            }
+        }
         return undefined;
     }
 

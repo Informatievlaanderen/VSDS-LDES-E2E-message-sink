@@ -27,6 +27,7 @@ ENV MEMBER_TYPE=
 ENV DATABASE_NAME=
 ENV COLLECTION_NAME=
 ENV MEMORY=
+ENV NO_STORAGE=
 # install signal-handler wrapper
 RUN apt-get -y install dumb-init
 # set start command
@@ -38,4 +39,4 @@ RUN npm install -g npm@${NPM_TAG}
 ENV NODE_ENV production
 RUN npm ci --omit=dev
 USER node
-CMD ["sh", "-c", "node ./server.js --host=0.0.0.0 --port=80 --memory=${MEMORY} --silent=${SILENT} --member-type=${MEMBER_TYPE} --connection-uri=${CONNECTION_URI} --database-name=${DATABASE_NAME} --collection-name=${COLLECTION_NAME}"]
+CMD ["sh", "-c", "node ./server.js --host=0.0.0.0 --port=80 --no-storage=${NO_STORAGE} --memory=${MEMORY} --silent=${SILENT} --member-type=${MEMBER_TYPE} --connection-uri=${CONNECTION_URI} --database-name=${DATABASE_NAME} --collection-name=${COLLECTION_NAME}"]
