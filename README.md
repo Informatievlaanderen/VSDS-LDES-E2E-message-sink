@@ -93,7 +93,15 @@ returns:
 ```
 
 ### `POST /member` -- Ingest Members
-Ingests a member as quads (mime-type: `application/n-quads`) or as triples (mime-type: `application/n-triples`) and returns the member ID (URI), e.g.
+Ingests a member as turtle (mime-type: `text/turtle`), Tri-G (mime-type: `application/trig`), quads (mime-type: `application/n-quads`) or as triples (mime-type: `application/n-triples`) and returns the member ID (URI), e.g.
+```bash
+curl -X POST http://localhost:9000/member -H "Content-Type: application/trig" -d "@data/donald-duck.trig"
+```
+OR
+```bash
+curl -X POST http://localhost:9000/member -H "Content-Type: text/turtle" -d "@data/donald-duck.ttl"
+```
+OR
 ```bash
 curl -X POST http://localhost:9000/member -H "Content-Type: application/n-quads" -d "@data/donald-duck.nq"
 ```

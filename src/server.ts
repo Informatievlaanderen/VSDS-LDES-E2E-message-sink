@@ -57,7 +57,7 @@ server.addHook('onResponse', (request, reply, done) => {
   done();
 });
 
-server.addContentTypeParser(['application/n-quads', 'application/n-triples'], { parseAs: 'string' }, function (request, body, done) {
+server.addContentTypeParser(['application/trig', 'text/turtle', 'application/n-quads', 'application/n-triples'], { parseAs: 'string' }, function (request, body, done) {
   try {
     const contentType = request.headers['content-type'];
     const parser = new Parser({ format: contentType });
