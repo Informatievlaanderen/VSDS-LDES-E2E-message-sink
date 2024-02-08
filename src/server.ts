@@ -5,7 +5,8 @@ import minimist from 'minimist'
 import { Parser, Quad } from 'n3';
 import { MongoStorage } from './mongo-storage';
 import { MemoryStorage } from './memory-storage';
-import { IStorage } from 'storage';
+import { IStorage } from './storage';
+import { NoStorage } from './no-storage';
 
 interface ParsedMember extends Member{
   quads: Quad[];
@@ -31,8 +32,15 @@ if (!memberType) {
 }
 
 const useMemoryStorage: boolean = (/true/i).test(args['memory']);
-const storage: IStorage = useMemoryStorage
-  ? new MemoryStorage(collectionName) 
+const useNoStorage: boolean = (/true/i).test(args['no-storage']);
+
+if(useMemoryStorage && useNoStorage) {
+  exitWithError('you cannot specify to use both "memory" and "no-storage".');
+}
+
+const storage: IStorage = 
+    useMemoryStorage ? new MemoryStorage(collectionName) 
+  : useNoStorage ? new NoStorage()
   : new MongoStorage(connectionUri, databaseName, collectionName);
 
 if(!silent) {
