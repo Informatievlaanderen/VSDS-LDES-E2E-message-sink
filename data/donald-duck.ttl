@@ -1,0 +1,5 @@
+@prefix schema: <http://schema.org/> .
+
+<http://example.org/id/cartoon-figure/donald-duck>
+  a schema:Person ; 
+  schema:name "Donald Duck" .
