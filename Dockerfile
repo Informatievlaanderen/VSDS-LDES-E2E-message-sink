@@ -1,7 +1,7 @@
 # build environment
-FROM node:20-bullseye-slim AS builder
+FROM node:22-bullseye-slim AS builder
 # fix vulnerabilities
-ARG NPM_TAG=9.9.2
+ARG NPM_TAG=10.8.2
 RUN npm install -g npm@${NPM_TAG}
 # build it
 WORKDIR /build
@@ -10,7 +10,7 @@ RUN npm ci
 RUN npm run build
 
 # run environment
-FROM node:20.11.0-bullseye-slim
+FROM node:22.5.0-bullseye-slim
 # fix vulnerabilities
 # note: trivy insists this to be on the same RUN line
 RUN apt-get -y update && apt-get -y upgrade
@@ -36,6 +36,7 @@ RUN apt-get -y install curl
 EXPOSE 80
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 # fix vulnerabilities
+ARG NPM_TAG=10.8.2
 RUN npm install -g npm@${NPM_TAG}
 # install dependancies
 ENV NODE_ENV=production
