@@ -30,13 +30,15 @@ ENV MEMORY=
 ENV NO_STORAGE=
 # install signal-handler wrapper
 RUN apt-get -y install dumb-init
+## install curl (for checking health)
+RUN apt-get -y install curl
 # set start command
 EXPOSE 80
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 # fix vulnerabilities
 RUN npm install -g npm@${NPM_TAG}
 # install dependancies
-ENV NODE_ENV production
+ENV NODE_ENV=production
 RUN npm ci --omit=dev
 USER node
 CMD ["sh", "-c", "node ./server.js --host=0.0.0.0 --port=80 --no-storage=${NO_STORAGE} --memory=${MEMORY} --silent=${SILENT} --member-type=${MEMBER_TYPE} --connection-uri=${CONNECTION_URI} --database-name=${DATABASE_NAME} --collection-name=${COLLECTION_NAME}"]
