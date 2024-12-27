@@ -102,7 +102,9 @@ server.post('/member', async (request, reply) => {
   }
 });
 
-server.get('/member', { schema: { querystring: { id: { type: 'string' } } } }, async (request, reply) => {
+const queryStringParams = { type: 'object', properties: { "id": { type: 'string', default: false } } };
+
+server.get('/member', { schema: { querystring: queryStringParams } }, async (request, reply) => {
   const id = (request.query as { id: string }).id;
   if (id) {
     const member = await controller.getMember(id);
